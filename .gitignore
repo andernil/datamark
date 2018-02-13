@@ -1,0 +1,4 @@
+# Ignore the lib and m5 folders
+framework/lib
+framework/m5
+
