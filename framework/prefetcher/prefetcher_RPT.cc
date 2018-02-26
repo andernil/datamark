@@ -93,6 +93,7 @@ void prefetch_now(AccessStat stat){
   }
   if(!in_cache(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride) && mapRPT[stat.pc].state == steady){
     issue_prefetch(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride);
+    issue_prefetch(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride+(uint64_t)mapRPT[stat.pc].stride);
     DPRINTF(HWPrefetch, "Prefetching\n");
   }
 }
