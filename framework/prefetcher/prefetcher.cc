@@ -57,14 +57,17 @@ void prefetch_now(AccessStat stat){
       mapRPT[stat.pc].stride[0] = diff;
 
     }
-    if ((mapRPT[stat.pc].stride[0] == mapRPT[stat.pc].stride[2]) && (mapRPT[stat.pc].stride[1] == mapRPT[stat.pc].stride[3])){
-      if(!in_cache(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride[0]) && ((stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0]) < MAX_PHYS_MEM_ADDR) && (!in_mshr_queue(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0]))){
-        issue_prefetch(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0]);
-        mapRPT[stat.pc].addrPrevMem = stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0];
+    for (int i = 1; i < (num_stride-2); i++){
+      if ((mapRPT[stat.pc].stride[0] == mapRPT[stat.pc].stride[num_stride-i-1]) && (mapRPT[stat.pc].stride[1] == mapRPT[stat.pc].stride[num_stride-i])){
+        if(!in_cache(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]) && ((stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]) < MAX_PHYS_MEM_ADDR) && (!in_mshr_queue(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]))){
+          issue_prefetch(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]);
+          mapRPT[stat.pc].addrPrevMem = stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1];
+          i = num_stride;
+        }
       }
+      else
+        mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
     }
-    else
-      mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
   }
 }
 
