@@ -7,6 +7,8 @@
 #include "interface.hh"
 #include <map>
 
+const int num_stride = 4;
+
 enum RPTstate {
   initial,
   transient,
@@ -20,13 +22,13 @@ enum RPTstate {
 3=steady
 4=no-prediction*/
 struct RPTable{
-  Addr addrPc, addrPrevMem;
-  int stride;
-  RPTstate state;
+  Addr addrPc, addrPrevMem, addrPrevFetch;
+  int stride[num_stride];
 };
 int diff = 0;
 //Map with the address of the instruction as key and a RPT as element
 static std::map<Addr,RPTable> mapRPT;
+
 void prefetch_init(void)
 {
     /* Called before any calls to prefetch_access. */
@@ -41,59 +43,27 @@ void prefetch_now(AccessStat stat){
   if(mapRPT.end() == mapRPT.find(stat.pc)){
     mapRPT[stat.pc].addrPc = stat.pc;
     mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
-    mapRPT[stat.pc].stride = 0;
-    mapRPT[stat.pc].state = initial;
+    mapRPT[stat.pc].addrPrevFetch = stat.mem_addr;
+    for(int i = 0; i < num_stride; i++)
+      mapRPT[stat.pc].stride[i] = 0;
   }
   //If it already is in the table, the entry is updated.
   //Case A.2.
-  
   else{
     diff = stat.mem_addr - mapRPT[stat.pc].addrPrevMem;
-    switch(mapRPT[stat.pc].state){
-    case initial:
-      if (mapRPT[stat.pc].stride == diff)
-        mapRPT[stat.pc].state = steady;
-      else {
-        mapRPT[stat.pc].stride = diff;
-        mapRPT[stat.pc].state = transient;
-      }
-      mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
-      break;
-    case transient:
-      if (mapRPT[stat.pc].stride == diff)
-        mapRPT[stat.pc].state = steady;
-      else{
-        mapRPT[stat.pc].stride = diff;
-        mapRPT[stat.pc].state = no_prediction;
-      }
-      mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
-      break;
-    case steady:
-      if (mapRPT[stat.pc].stride != diff){
-        mapRPT[stat.pc].state = initial;
-      }
-      else{
-        mapRPT[stat.pc].state = steady;
-      }
-      mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
-      break;
-    case no_prediction:
-      if (mapRPT[stat.pc].stride == diff)
-        mapRPT[stat.pc].state = transient;
-      else{
-        mapRPT[stat.pc].stride = diff;
-        mapRPT[stat.pc].state = no_prediction;
-      }
-      mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
-      break;
-    default:
-      mapRPT[stat.pc].state = initial;
-      break;
+    if (diff != 0){
+      for(int i = 1; i < num_stride; i++)
+        mapRPT[stat.pc].stride[num_stride-i] = mapRPT[stat.pc].stride[num_stride-1-i];
+      mapRPT[stat.pc].stride[0] = diff;
+
     }
-  }
-  if(!in_cache(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride) && mapRPT[stat.pc].state == steady){
-    issue_prefetch(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride);
-    DPRINTF(HWPrefetch, "Prefetching\n");
+    if ((mapRPT[stat.pc].stride[0] == mapRPT[stat.pc].stride[2]) && (mapRPT[stat.pc].stride[1] == mapRPT[stat.pc].stride[3])){
+      if(!in_cache(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride[0]) && ((stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0]) < MAX_PHYS_MEM_ADDR) && (!in_mshr_queue(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0]))){
+        issue_prefetch(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0]);
+        mapRPT[stat.pc].addrPrevMem = stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0];
+      }
+    }
+    mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
   }
 }
 
