@@ -61,8 +61,10 @@ void prefetch_now(AccessStat stat){
       if ((mapRPT[stat.pc].stride[0] == mapRPT[stat.pc].stride[num_stride-i-1]) && (mapRPT[stat.pc].stride[1] == mapRPT[stat.pc].stride[num_stride-i])){
         if(!in_cache(stat.mem_addr+(uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]) && ((stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]) < MAX_PHYS_MEM_ADDR) && (!in_mshr_queue(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]))){
           issue_prefetch(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]);
+          issue_prefetch(stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1]+ (uint64_t)mapRPT[stat.pc].stride[num_stride-i]);
           mapRPT[stat.pc].addrPrevMem = stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[num_stride-i-1];
           i = num_stride;
+          mapRPT[stat.pc].addrPrevFetch = mapRPT[stat.pc].addrPrevMem;
         }
       }
       else
