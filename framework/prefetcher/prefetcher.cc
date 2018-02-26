@@ -63,7 +63,8 @@ void prefetch_now(AccessStat stat){
         mapRPT[stat.pc].addrPrevMem = stat.mem_addr + (uint64_t)mapRPT[stat.pc].stride[0];
       }
     }
-    mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
+    else
+      mapRPT[stat.pc].addrPrevMem = stat.mem_addr;
   }
 }
 
