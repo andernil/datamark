@@ -5,9 +5,9 @@ The Regents of The University of Michigan
 All Rights Reserved
 
 
-M5 compiled Mar  1 2018 19:39:29
+M5 compiled Mar 29 2018 06:38:57
 M5 revision Unknown
-M5 started Mar  1 2018 19:40:36
+M5 started Mar 29 2018 06:40:34
 M5 executing on anders-ThinkPad-E470
 command line: m5/build/ALPHA_SE/m5.opt --remote-gdb-port=0 -re --outdir=output/swim-user m5/configs/example/se.py --checkpoint-dir=lib/cp --checkpoint-restore=1000000000 --at-instruction --caches --l2cache --standard-switch --warmup-insts=10000000 --max-inst=10000000 --l2size=1MB --membus-width=8 --membus-clock=400MHz --mem-latency=30ns --bench=swim --prefetcher=on_access=true:policy=proxy
 Global frequency set at 1000000000000 ticks per second
@@ -22,10 +22,10 @@ Changing memory mode to timing
 switching cpus
 Switch at instruction count:10000000
 info: Entering event queue @ 500110105000.  Starting simulation...
-Switching CPUS @ cycle = 519054508000
+Switching CPUS @ cycle = 517930924000
 Simulation ends instruction count:10000000
-info: Entering event queue @ 519054508000.  Starting simulation...
+info: Entering event queue @ 517930924000.  Starting simulation...
 switching cpus
 **** REAL SIMULATION ****
-info: Entering event queue @ 519054509000.  Starting simulation...
-Exiting @ cycle 526127998000 because a thread reached the max instruction count
+info: Entering event queue @ 517930972500.  Starting simulation...
+Exiting @ cycle 524875574000 because a thread reached the max instruction count
