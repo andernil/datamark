@@ -5,11 +5,11 @@ The Regents of The University of Michigan
 All Rights Reserved
 
 
-M5 compiled Mar 29 2018 06:38:57
+M5 compiled Apr  6 2018 11:13:14
 M5 revision Unknown
-M5 started Mar 29 2018 06:42:16
+M5 started Apr  6 2018 20:09:46
 M5 executing on anders-ThinkPad-E470
-command line: m5/build/ALPHA_SE/m5.opt --remote-gdb-port=0 -re --outdir=output/apsi-user m5/configs/example/se.py --checkpoint-dir=lib/cp --checkpoint-restore=1000000000 --at-instruction --caches --l2cache --standard-switch --warmup-insts=10000000 --max-inst=10000000 --l2size=1MB --membus-width=8 --membus-clock=400MHz --mem-latency=30ns --bench=apsi --prefetcher=on_access=true:policy=proxy
+command line: m5/build/ALPHA_SE/m5.opt --remote-gdb-port=0 -re --outdir=output/apsi-user m5/configs/example/se.py --checkpoint-dir=lib/cp --checkpoint-restore=1000000000 --at-instruction --caches --l2cache --standard-switch --warmup-insts=10000000 --max-inst=10000000 --l2size=2MB --membus-width=8 --membus-clock=400MHz --mem-latency=30ns --bench=apsi --prefetcher=on_access=true:policy=proxy
 Global frequency set at 1000000000000 ticks per second
 Creating prefetcher proxy
 Restoring checkpoint ...
@@ -22,10 +22,10 @@ Changing memory mode to timing
 switching cpus
 Switch at instruction count:10000000
 info: Entering event queue @ 504281176500.  Starting simulation...
-Switching CPUS @ cycle = 519086308000
+Switching CPUS @ cycle = 519195268000
 Simulation ends instruction count:10000000
-info: Entering event queue @ 519086308000.  Starting simulation...
+info: Entering event queue @ 519195268000.  Starting simulation...
 switching cpus
 **** REAL SIMULATION ****
-info: Entering event queue @ 519086309000.  Starting simulation...
-Exiting @ cycle 522307479500 because a thread reached the max instruction count
+info: Entering event queue @ 519195269000.  Starting simulation...
+Exiting @ cycle 522399642500 because a thread reached the max instruction count

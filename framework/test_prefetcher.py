@@ -33,7 +33,7 @@ global_args(
     '--standard-switch', '--warmup-insts=%d' % 1e7,
     '--max-inst=%d' % 1e7,
 
-    '--l2size=1MB',
+    '--l2size=1MB', #'--l2size=1MB'
     '--membus-width=8', '--membus-clock=400MHz', '--mem-latency=30ns',
 )
 
